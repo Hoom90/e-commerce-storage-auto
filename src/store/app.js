@@ -1,29 +1,42 @@
 // Utilities
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const appStore = defineStore('app', {
+export const appStore = defineStore("app", {
   state: () => ({
     breadcrumbs: [],
-    token:null,
+    pageTitle: {
+      title: "داشبورد",
+      to: "/account",
+    },
+    options: [],
+    token: null,
   }),
-  getters:{
+  getters: {
     getBreadCrumbs: (state) => {
-      return [{
-          title: 'کنترل پنل',
-          to: '/account'
-      },
-      ...state.breadcrumbs]
+      return state.breadcrumbs;
+    },
+    getPageTitle: (state) => {
+      return state.pageTitle;
+    },
+    getOptions: (state) => {
+      return state.options;
     },
     getAuth: (state) => {
-      return state.token ? true : false
-    }
+      return state.token ? true : false;
+    },
   },
   actions: {
     setBreadCrumbs(breadcrumbs) {
-        this.breadcrumbs = breadcrumbs
+      this.breadcrumbs = breadcrumbs;
+    },
+    setPageTitle(pageTitle) {
+      this.pageTitle = pageTitle;
+    },
+    setOptions(options) {
+      this.options = options;
     },
     setToken(token) {
-      this.token = token
-    }
-  }
-})
+      this.token = token;
+    },
+  },
+});

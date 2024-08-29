@@ -9,8 +9,8 @@ const message = ref(null)
 const IsError = ref(false)
 const router = useRouter()
 const state = reactive({
-    username:'',
-    password:''
+  username: '',
+  password: ''
 })
 
 const loggedIn = computed(() => {
@@ -24,31 +24,31 @@ onMounted(() => {
 })
 
 const login = () => {
-debugger
-    //   if (!username.value) {
-//     usernameError.value = true
-//     document.querySelector("input[name=username]").classList.add("border-red-500")
-//   }
-//   if(!password.value) {
-//     passwordError.value = true
-//     document.querySelector("input[name=password]").classList.add("border-red-500")
-//   }
-//   else {
-//     loading.value = true;
-//     if (username.value && password.value) {
-//       store.dispatch('auth/login', {'username':username.value, 'password':password.value}).then(
-//         () => {
-//           loading.value = false;
-//           router.push('/');
-//         },
-//         error => {
-//           message.value = error.toString().split(":")[1]
-//           IsError.value = true
-//           loading.value = false;
-//         }
-//       )
-//     }
-//   }
+  debugger
+  //   if (!username.value) {
+  //     usernameError.value = true
+  //     document.querySelector("input[name=username]").classList.add("border-red-500")
+  //   }
+  //   if(!password.value) {
+  //     passwordError.value = true
+  //     document.querySelector("input[name=password]").classList.add("border-red-500")
+  //   }
+  //   else {
+  //     loading.value = true;
+  //     if (username.value && password.value) {
+  //       store.dispatch('auth/login', {'username':username.value, 'password':password.value}).then(
+  //         () => {
+  //           loading.value = false;
+  //           router.push('/');
+  //         },
+  //         error => {
+  //           message.value = error.toString().split(":")[1]
+  //           IsError.value = true
+  //           loading.value = false;
+  //         }
+  //       )
+  //     }
+  //   }
 }
 
 const authorizeInput = () => {
@@ -76,27 +76,31 @@ const authorizeInput = () => {
 </script>
 
 <template>
-    <form @submit.prevent="login">
-        <div class="flex flex-col gap-5 p-[20px] h-screen justify-center items-center">
-            <div class="flex flex-col gap-5 w-full justify-center items-center">
-                <p class="font-bold text-[24px]">خوش آمدید</p>
-                <div class="flex flex-col gap-2 max-w-[300px] w-full">
-                    <div class="relative">
-                        <input type="text" v-model="state.username" class="w-full border rounded px-2 p-2 focus:border-[#49b779] focus:outline-none" @keydown.prevent="login">
-                        <span class="floating-label">نام کاربری</span>
-                    </div>
-                    <div class="relative">
-                        <input type="password" v-model="state.password" class="w-full border rounded px-2 p-2 focus:border-[#49b779] focus:outline-none" dir="ltr" @keydown.prevent="login">
-                        <span class="floating-label">رمز عبور</span>
-                    </div>
-                </div>
-                <button type="submit" class="bg-[#49B779] font-bold rounded text-white max-w-[100px] w-full px-2 p-2">ورود</button>
-            </div>
+  <form @submit.prevent="login">
+    <div class="flex flex-col gap-5 p-[20px] h-screen justify-center items-center">
+      <div class="flex flex-col gap-5 w-full justify-center items-center">
+        <p class="font-bold text-[24px]">خوش آمدید</p>
+        <div class="flex flex-col gap-2 max-w-[300px] w-full">
+          <div class="relative">
+            <input type="text" v-model="state.username"
+              class="w-full border rounded px-2 p-2 focus:border-[#49b779] focus:outline-none" @keydown.prevent="login">
+            <span class="floating-label">نام کاربری</span>
+          </div>
+          <div class="relative">
+            <input type="password" v-model="state.password"
+              class="w-full border rounded px-2 p-2 focus:border-[#49b779] focus:outline-none" dir="ltr"
+              @keydown.prevent="login">
+            <span class="floating-label">رمز عبور</span>
+          </div>
         </div>
-    </form>
+        <button type="submit"
+          class="bg-[#49B779] font-bold rounded text-white max-w-[100px] w-full px-2 p-2">ورود</button>
+      </div>
+    </div>
+  </form>
 
-    <Loading v-if="loading" />
-    <error v-if="IsError" :message="message" @update:IsError="()=>{IsError = false}" />
+  <Loading v-if="loading" />
+  <error v-if="IsError" :message="message" @update:IsError="() => { IsError = false }" />
 </template>
 <style scoped>
 .floating-label {
