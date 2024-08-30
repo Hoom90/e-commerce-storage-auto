@@ -43,8 +43,7 @@ onMounted(() => {
 })
 
 const handleOptions = () => {
-  if (state.options) optionsBar.value.classList.replace('opacity-1', 'opacity-0')
-  else optionsBar.value.classList.replace('opacity-0', 'opacity-1')
+  optionsBar.value.classList.toggle('hidden')
   state.options = !state.options
 }
 
@@ -61,7 +60,7 @@ const handleLogout = () => {
 
 </script>
 <template>
-  <div class="fixed top-0 bg-main w-full shadow-[-1px_3px_1px] shadow-shadow z-10">
+  <div class="fixed top-0 bg-main w-full shadow-md z-10">
 
     <div class="grid grid-flow-col grid-cols-3 text-center items-center gap-3 p-5">
       <button :disabled="breadCrumb.getBreadCrumbs.length != 0 ? false : true"
@@ -85,13 +84,15 @@ const handleLogout = () => {
       <p class="font-bold text-[20px]">{{ breadCrumb.getPageTitle.title }}</p>
       <button dir="ltr" :disabled="options.getOptions.length != 0 ? false : true"
         :class="options.getOptions.length != 0 ? 'visible' : 'invisible'">
-        <img :src="setting2Icon" @click="handleOptions" @blur="handleOptions" alt="setting2Icon">
-        <div ref="optionsBar"
-          class="absolute top-20 left-0 opacity-0 bg-forth w-full shadow-[0px_3px_5px] shadow-fifth p-3 transition-all duration-300">
-          <button v-for="(item, index) in options.getOptions" :key="index" class="w-full rounded p-3" :class="item.style"
-            @click="item.method">{{
-              item.title
-            }}</button>
+        <img :src="setting2Icon" @click="handleOptions" alt="setting2Icon">
+        <div ref="optionsBar" class="absolute hidden top-20 left-0 bg-transparent w-full h-[calc(100vh-150px)]"
+          @click="handleOptions">
+          <div class="bg-main p-3 shadow-md">
+            <button v-for="(item, index) in options.getOptions" :key="index" class="w-full rounded p-3"
+              :class="item.style" @click="item.method">{{
+                item.title
+              }}</button>
+          </div>
         </div>
       </button>
     </div>
@@ -130,13 +131,15 @@ const handleLogout = () => {
 
 
 
-  <div class="overflow-auto bg-fifth mr-auto transition-all ease-in-out mt-20 p-5">
-    <div class="w-full h-[calc(100vh-120px)]">
+  <div class="h-[calc(100vh-150px)] overflow-auto mt-20 p-5 relative">
+    <RouterView />
+
+    <!-- <div class=" w-full h-full">
       <RouterView />
-    </div>
+    </div> -->
   </div>
 
-  <div class="fixed bottom-0 bg-background w-full z-10 shadow-[0_-3px_1px] shadow-shadow">
+  <div class="fixed bottom-0 bg-background w-full z-10 shadow-md">
     <div class="grid grid-flow-col items-center">
       <button type="button" v-for="item in links" class="flex justify-center items-center">
         <RouterLink :to="item.url" :title="item.title" class="w-full py-1" exact-active-class="bg-main">
