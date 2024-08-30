@@ -1,4 +1,5 @@
 <script setup>
+import zoomIconComp from "@/assets/component/zoom.vue"
 import leftIconComp from "@/assets/component/left.vue"
 import bag_plusIconComp from "@/assets/component/bag_plus.vue"
 import { appStore } from "@/store/app";
@@ -46,8 +47,9 @@ const getData = async () => {
 }
 </script>
 <template>
-    <div class="mb-3">
-        <input type="search" class="border rounded w-full p-3" placeholder="جستجوی قیمت کالا بر اساس نام کالا">
+    <div class="border rounded w-full mb-3 pl-3 flex justify-between items-center">
+        <input type="search" class="w-full p-3 focus:outline-none" placeholder="جستجوی قیمت کالا بر اساس نام کالا">
+        <zoomIconComp width="20" color="#aaa" />
     </div>
 
     <div class="w-full">
