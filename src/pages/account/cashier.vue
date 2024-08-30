@@ -1,6 +1,6 @@
 <script setup>
 import leftIconComp from "@/assets/component/left.vue"
-import bag_plusIconComp from "@/assets/component/bag_plus.vue"
+import shopping_cartIconComp from "@/assets/component/shopping_cart.vue"
 // import addTransitionComp from "./cashierView/addTransactionComp.vue"
 // import closeBalanceComp from "./cashierView/closeBalanceComp.vue"
 import { appStore } from "@/store/app";
@@ -262,7 +262,7 @@ const IsDeleteActive = (index) => {
     <button
         class="fixed bottom-24 right-5 bg-blue-500 w-14 aspect-square rounded-full flex justify-center items-center shadow-xl"
         @click="state.modal = !state.modal">
-        <bag_plusIconComp width="40" color="#ffffff" />
+        <shopping_cartIconComp width="40" color="#ffffff" />
     </button>
 
     <Loading v-if="loading"></Loading>
