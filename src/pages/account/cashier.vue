@@ -1,6 +1,8 @@
 <script setup>
-import addTransitionComp from "./cashierView/addTransactionComp.vue"
-import closeBalanceComp from "./cashierView/closeBalanceComp.vue"
+import leftIconComp from "@/assets/component/left.vue"
+import bag_plusIconComp from "@/assets/component/bag_plus.vue"
+// import addTransitionComp from "./cashierView/addTransactionComp.vue"
+// import closeBalanceComp from "./cashierView/closeBalanceComp.vue"
 import { appStore } from "@/store/app";
 // import axiosApi from "@/composables/axios-api"
 // const instance = getCurrentInstance()
@@ -27,6 +29,7 @@ const state = reactive({
     historyData: [],
 })
 
+const tableHeader = ['مبلغ (ریال)', 'نوع پرداخت']
 const balanceData = ref({ income: '', debt: '', current: '' })
 const loading = ref(false)
 const message = ref(null)
@@ -38,12 +41,12 @@ onMounted(() => {
         to: '/account/cashier'
     })
     options.setOptions([
-        { title: 'بستن دخل', style: 'bg-teal-500 text-white', method: testOptions },
-        { title: 'وضعیت دخل', style: 'bg-violet-500 text-white mt-1', method: testOptions2 }
+        { title: 'بستن دخل', style: 'bg-blue-500 text-white', method: testOptions },
+        { title: 'وضعیت دخل', style: 'bg-white border border-blue-500 rounded mt-1', method: testOptions2 }
     ])
     state.income.typeIn = 'کارتخوان1'
     state.outcome.typeOut = 'کارت به کارت'
-    // getData()
+    getData()
 })
 
 const testOptions = () => {
@@ -55,14 +58,24 @@ const testOptions2 = () => {
 }
 
 const getData = async () => {
-    balanceData.value = { income: '', debt: '', current: '' }
-    state.historyData = []
-    loading.value = true
-    await getBalance()
-    await getBalanceLogs()
-    calculateTodayBalance()
-    formatHistoryData()
-    loading.value = false
+    state.historyData = [
+        { amount: 5000, source: 'کارت', type: 1 },
+        { amount: 15000, source: 'نقد', type: 2 },
+        { amount: 25000, source: 'نقد', type: 1 },
+        { amount: 58000, source: 'کارت', type: 1 },
+        { amount: 100000, source: 'کارت به کارت', type: 1 },
+        { amount: 1000000, source: 'کارت به کارت', type: 1 },
+        { amount: 45000, source: 'نقد', type: 1 },
+        { amount: 10000, source: 'نقد', type: 1 },
+    ]
+    // balanceData.value = { income: '', debt: '', current: '' }
+    // state.historyData = []
+    // loading.value = true
+    // await getBalance()
+    // await getBalanceLogs()
+    // calculateTodayBalance()
+    // formatHistoryData()
+    // loading.value = false
 }
 
 // Get Today Transactions
@@ -231,66 +244,26 @@ const IsDeleteActive = (index) => {
 
 </script>
 <template>
-    <div class="relative">
-        <!-- <button class="absolute w-full flex justify-between top-0 right-0 bg-red-500 text-white p-2 text-[12px]"
-            v-if="message" @click="() => { message = null }">
-            {{ message }}
-            <i>x</i>
-        </button> -->
+    <select class="w-full border rounded p-3 mb-3">
+        <option value="null" selected>نمایش بر اساس</option>
+    </select>
 
-        <!-- <div class="flex justify-between border rounded">
-            <p class="text-[24px] p-1 px-3">صندوق</p>
-            <button class="bg-teal-500 text-white p-1 px-3 rounded-l hover:bg-teal-600"
-                @click="state.closeBalance = !state.closeBalance">بستن دخل</button>
-        </div> -->
-
-        <div class="w-full h-full lg:flex gap-3">
-            <div class="lg:w-1/3 lg:order-2 mb-3 lg:mb-0">
-                <!-- <div class="border rounded min-h-[100px] p-3">
-                    <p class="flex justify-between"><span>درآمد امروز: </span><span>{{ balanceData.income }}
-                            (ریال)</span></p>
-                    <p class="flex justify-between"><span>بدهی امروز: </span><span>{{ balanceData.debt }} (ریال)</span>
-                    </p>
-                    <p class="flex justify-between"><span>وضعیت دخل امروز: </span><span>{{ balanceData.current }}
-                            (ریال)</span></p>
-                </div> -->
-                <button
-                    class="bg-blue-500 text-white p-1 px-3 rounded hover:bg-blue-600 shadow-md hover:shadow-none w-full mt-3 h-[50px]"
-                    @click="state.modal = !state.modal">ثبت تراکنش</button>
-            </div>
-            <div class="w-full border rounded lg:order-1">
-                <div class="flex text-center">
-                    <div class="py-2 px-3 w-full" v-for="item in ['نام کاربر', 'هزینه ها (ریال)', 'نوع پرداخت', 'توضیحات']">
-                        {{ item }}</div>
-                </div>
-                <div v-if="state.historyData?.length > 0" class="overflow-auto">
-                    <div v-for="(item, index) in state.historyData"
-                        class="flex border-t text-center hover:bg-[#e9e9e9] relative" :key="item.id">
-                        <div class="py-2 px-3 w-full">{{ item.receiverName }}</div>
-                        <div class="py-2 px-3 w-full" dir="ltr">{{ item.amount }}</div>
-                        <div class="py-2 px-3 w-full"> {{ item.type }}</div>
-                        <div class="py-2 px-3 w-full">{{ item.description ? item.description : '-' }}</div>
-                        <button class="bg-red-500 p-1 rounded-md text-white hover:bg-red-600 shadow-lg hover:shadow-none"
-                            v-if="IsDeleteActive(index)" @click="deleteData(index)">
-                            <!-- <button class="absolute top-[50%] right-3 translate-y-[-50%] bg-red-500 p-1 rounded-md text-white hover:bg-red-600 shadow-lg hover:shadow-none" @click="deleteData(id)"> -->
-                            <img :src="RemoveIconSVG" alt="RemoveIconSVG">
-                        </button>
-                    </div>
-                </div>
+    <div class="w-full lg:order-1">
+        <div v-for="(item, index) in state.historyData" class="flex border bg-white rounded-full mb-3 text-center shadow"
+            :class="item.type == 2 ? 'border-red-500 text-red-500' : 'border-green-500 text-green-500'" :key="index">
+            <div class="py-2 px-3 w-full"> {{ item.source }}</div>
+            <div class="py-2 px-3 w-full" dir="ltr">{{ item.amount.toLocaleString() }}</div>
+            <div class="flex items-center justify-center px-3">
+                <leftIconComp width="20" color="#000" />
             </div>
         </div>
     </div>
 
+    <button
+        class="fixed bottom-24 right-5 bg-blue-500 w-14 aspect-square rounded-full flex justify-center items-center shadow-xl"
+        @click="state.modal = !state.modal">
+        <bag_plusIconComp width="40" color="#ffffff" />
+    </button>
+
     <Loading v-if="loading"></Loading>
-
-    <addTransitionComp v-if="state.modal" :income="state.income" :outcome="state.outcome"
-        @closeForm="(value) => state.modal = value" @postEarning="postEarning" @postExpense="postExpense" />
-
-    <closeBalanceComp v-if="state.closeBalance" @close="(value) => state.closeBalance = value" />
 </template>
-
-<style scoped>
-input {
-    padding: 5px;
-}
-</style>
