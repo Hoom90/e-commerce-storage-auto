@@ -1,9 +1,9 @@
 <script setup>
-import modalComp from "../components/modalComp.vue"
-import inventory from './warehouseView/inventory.vue'
-import { onMounted, ref, reactive, getCurrentInstance } from 'vue'
-const instance = getCurrentInstance()
-const axiosApi = instance.appContext.config.globalProperties.$axiosApi
+import leftIconComp from "@/assets/component/left.vue"
+import bag_plusIconComp from "@/assets/component/bag_plus.vue"
+import { appStore } from "@/store/app";
+const breadCrumb = appStore()
+const options = appStore()
 const state = reactive({
     inventoryData: [{
         "id": 1,
@@ -17,184 +17,58 @@ const state = reactive({
     loading: false,
 })
 
-const message = ref(null)
-const IsModalOpen = ref(false)
-const errorMessage = ref(null)
-const stockAmount = ref(0)
-const liquidity = ref(0)
-
 onMounted(() => {
+    breadCrumb.setBreadCrumbs([])
+    breadCrumb.setPageTitle({
+        title: 'انبارداری',
+        to: '/account/warehouse'
+    })
+    options.setOptions([
+        { title: 'قیمت ها', style: 'border border-blue-500 bg-white text-blue-500', method: null },
+        { title: 'نقدینگی', style: 'border border-blue-500 bg-white text-blue-500 mt-1', method: null }
+    ])
     getData()
-    if (state.inventoryData.length > 0) {
-        calculateLiquidity()
-        calculateStockAmount()
-    }
 })
 
 // Get All Items
 const getData = async () => {
     state.loading = true
-    // await axiosApi.get(apiPath.storage.getAll)
-    // .then((res) => {
-    //     state.inventoryData = res.data;
-    //     message.value = 'کالایی یافت نشد!'
-    // })
-    // .catch((error) => {
-    //     console.error(error);
-    //     message.value = error
-    // })
+    state.inventoryData = [
+        { title: 'نون قندی', amount: 10, unit: 'کیلو' },
+        { title: 'تن ماهی ایلیکا', amount: 50, unit: 'عدد' },
+        { title: 'برنج محسن', amount: 20, unit: 'کیسه' },
+        { title: 'تخم مرغ کوچی اعلاء', amount: 3, unit: 'کارتن' },
+        { title: 'روغن گیاهی 5 کیلویی حلبی گلی', amount: 10, unit: 'عدد' },
+        { title: 'ماکارانی 1/2 تک ماکاران', amount: 25, unit: 'عدد' },
+        { title: 'رب چین چین', amount: 20, unit: 'عدد' },
+    ]
     state.loading = false
 }
-
-const calculateLiquidity = () => {
-    let temp = 0
-    state.inventoryData.forEach(item => {
-        temp = parseInt(temp) + (parseInt(item.basePrice) * parseInt(item.amount))
-    });
-    liquidity.value = formatData(temp)
-}
-
-const calculateStockAmount = () => {
-    let temp = 0
-    state.inventoryData.forEach(item => {
-        temp = parseInt(temp) + parseInt(item.amount)
-    })
-    stockAmount.value = formatData(temp)
-}
-
-// turn string to currency
-const formatData = (data) => {
-    return (data = data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-};
-
-const searchMainTable = () => {
-    let filter, table, li, a, i, txtValue;
-    let search = document.querySelectorAll('#TableSearchBox')[0]
-    filter = search.value.toUpperCase();
-    table = document.querySelectorAll('#tableData')[0];
-    li = table.children
-    for (i = 0; i < li.length; i++) {
-        a = li[i].children[1];
-        txtValue = a.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
-        }
-    }
-}
-
-const searchLiquidityTable = () => {
-    let filter, table, li, a, i, txtValue;
-    let search = document.querySelectorAll('#TableSearchBox')[1]
-    filter = search.value.toUpperCase();
-    table = document.querySelectorAll('#tableData')[1];
-    li = table.children
-    for (i = 0; i < li.length; i++) {
-        a = li[i].children[1];
-        txtValue = a.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-        } else {
-            a = li[i].children[2];
-            txtValue = a.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                li[i].style.display = "";
-            } else {
-                a = li[i].children[5];
-                txtValue = a.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    li[i].style.display = "";
-                } else {
-                    li[i].style.display = "none";
-                }
-            }
-        }
-    }
-}
-
-const handleTableNav = (flag) => {
-    let tables = document.querySelectorAll('#TableBody')
-    let tableNavs = document.querySelectorAll('#TableNav')
-    let tableSearchBoxs = document.querySelectorAll('#TableSearchBox')
-    if (flag) {
-        tables[0].classList.replace('block', 'hidden')
-        tables[1].classList.replace('hidden', 'block')
-
-        tableNavs[0].classList.replace('border-blue-500', 'hover:border-blue-500')
-        tableNavs[1].classList.replace('hover:border-blue-500', 'border-blue-500')
-
-        tableSearchBoxs[0].classList.replace('block', 'hidden')
-        tableSearchBoxs[1].classList.replace('hidden', 'block')
-    }
-    else {
-        tables[0].classList.replace('hidden', 'block')
-        tables[1].classList.replace('block', 'hidden')
-
-        tableNavs[0].classList.replace('hover:border-blue-500', 'border-blue-500')
-        tableNavs[1].classList.replace('border-blue-500', 'hover:border-blue-500')
-
-        tableSearchBoxs[0].classList.replace('hidden', 'block')
-        tableSearchBoxs[1].classList.replace('block', 'hidden')
-    }
-}
-
-const updateIsModalOpen = (value) => {
-    IsModalOpen.value = value
-}
-
 </script>
 <template>
-    <main class="relative h-[80vh]">
-        <!-- <button class="absolute w-full flex justify-between top-0 right-0 bg-red-500 text-white p-2 text-[12px]" v-if="message" @click="()=>{message = null}">
-            {{message}}
-            <i>x</i>
-        </button> -->
-
-        <div class="flex justify-between border rounded">
-            <p class="text-[24px] p-1 px-3">ثبت کالا</p>
-            <div class="justify-center items-center gap-10 relative hidden sm:flex">
-                <button class="flex justify-center items-center w-full h-full" @click="state.tab = 1">قیمت</button>
-                <button class="flex justify-center items-center w-full h-full" @click="state.tab = 2">نقدینگی</button>
-                <div class="border-b border-2 absolute -bottom-0 border-blue-500 transition-all ease-in-out"
-                    :class="state.tab == 1 ? '-right-1 w-[50px]' : 'right-[80px] w-[60px]'"></div>
-            </div>
-            <button class="flex justify-center items-center text-white rounded-l bg-teal-500 hover:bg-teal-600 px-2"
-                @click="() => { IsModalOpen = true }">
-                <img :src="AddIconSVG" alt="+" />
-                <span>| کالای جدید</span>
-            </button>
-        </div>
-
-        <div class="grid grid-flow-col grid-cols-2 mt-3 border rounded relative sm:hidden">
-            <button class="p-3" @click="state.tab = 1">قیمت</button>
-            <button class="p-3" @click="state.tab = 2">نقدینگی</button>
-            <div class="border-b border-2 absolute -bottom-0 border-blue-500 transition-all ease-in-out w-1/2"
-                :class="state.tab == 1 ? '-right-0' : 'right-1/2'"></div>
-        </div>
-
-        <inventory v-if="state.tab == 1" :data="state.inventoryData" />
-        <!-- <liquidity v-if="state.tab == 2"/> -->
-    </main>
-    <Loading v-if="state.loading"></Loading>
-    <modalComp v-if="IsModalOpen" :IsModalOpen="IsModalOpen" @update:IsModalOpen="updateIsModalOpen">
-        <div class="flex flex-nowrap justify-center items-center w-full gap-1 h-screen text-white ">
-            <button
-                class="flex justify-center items-center bg-red-500 hover:bg-red-600 w-[50px] h-[50px] rounded absolute top-5 right-5"
-                @click="handleIsModalOpen">
-                <img :src="ArrowIconSVG" alt="x">
-            </button>
-            <RouterLink to="/warehouse/newItem"
-                class="flex justify-center items-center bg-blue-500 hover:bg-blue-600 w-[200px] h-[100px] rounded">
-                افزودن تک کالا
-            </RouterLink>
-            <RouterLink to='/warehouse/newlist'
-                class="flex justify-center items-center bg-teal-500 hover:bg-teal-600 w-[200px] h-[100px] rounded">
-                افزودن فاکتور
-            </RouterLink>
-        <RouterLink to='/warehouse/newOrder'
-            class="flex justify-center items-center bg-green-500 hover:bg-green-600 w-[200px] h-[100px] rounded">
-            افزودن فروش
-        </RouterLink>
+    <div class="mb-3">
+        <input type="search" class="border rounded w-full p-3" placeholder="جستجوی قیمت کالا بر اساس نام کالا">
     </div>
-</modalComp></template>
+
+    <div class="w-full">
+        <div v-for="(item, index) in state.inventoryData"
+            class="flex items-center border bg-white rounded mb-3 text-center shadow" :key="index">
+            <div class="py-2 px-3 w-full"> {{ item.title }}</div>
+            <div class="py-2 px-3 w-full">
+                <div dir="ltr">{{ item.amount.toLocaleString() }}</div>
+                <div dir="ltr">{{ item.unit }}</div>
+            </div>
+            <div class="flex items-center justify-center px-3">
+                <leftIconComp width="20" color="#000" />
+            </div>
+        </div>
+    </div>
+
+    <button
+        class="fixed bottom-24 right-5 bg-blue-500 w-14 aspect-square rounded-full flex justify-center items-center shadow-xl"
+        @click="state.modal = !state.modal">
+        <bag_plusIconComp width="40" color="#ffffff" />
+    </button>
+
+    <Loading v-if="state.loading"></Loading>
+</template>
