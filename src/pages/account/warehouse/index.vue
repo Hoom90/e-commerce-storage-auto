@@ -5,6 +5,7 @@ import bag_plusIconComp from "@/assets/component/bag_plus.vue"
 import { appStore } from "@/store/app";
 const breadCrumb = appStore()
 const options = appStore()
+const router = useRouter()
 const state = reactive({
     inventoryData: [{
         "id": 1,
@@ -45,6 +46,10 @@ const getData = async () => {
     ]
     state.loading = false
 }
+
+const handleAdd = () => {
+    router.push('/account/warehouse/add')
+}
 </script>
 <template>
     <div class="border rounded w-full mb-3 pl-3 flex justify-between items-center">
@@ -68,7 +73,7 @@ const getData = async () => {
 
     <button
         class="fixed bottom-24 right-5 bg-blue-500 w-14 aspect-square rounded-full flex justify-center items-center shadow-xl"
-        @click="state.modal = !state.modal">
+        @click="handleAdd">
         <bag_plusIconComp width="40" color="#ffffff" />
     </button>
 
