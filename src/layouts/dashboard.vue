@@ -62,7 +62,7 @@ const handleLogout = () => {
 <template>
   <div class="fixed top-0 bg-main w-full shadow-md z-10">
 
-    <div class="grid grid-flow-col grid-cols-3 text-center items-center gap-3 p-5">
+    <div class="grid grid-flow-col grid-cols-3 text-center items-center gap-3 p-3 px-5">
       <button :disabled="breadCrumb.getBreadCrumbs.length != 0 ? false : true"
         :class="breadCrumb.getBreadCrumbs.length != 0 ? 'visible' : 'invisible'">
         <img :src="rightIcon" alt="rightIcon">
@@ -81,7 +81,7 @@ const handleLogout = () => {
             stroke-linejoin="round" />
         </svg>
       </button> -->
-      <p class="font-bold text-[20px]">{{ breadCrumb.getPageTitle.title }}</p>
+      <p class="font-bold">{{ breadCrumb.getPageTitle.title }}</p>
       <button dir="ltr" :disabled="options.getOptions.length != 0 ? false : true"
         :class="options.getOptions.length != 0 ? 'visible' : 'invisible'">
         <img :src="setting2Icon" @click="handleOptions" alt="setting2Icon">
@@ -131,7 +131,7 @@ const handleLogout = () => {
 
 
 
-  <div class="h-[calc(100vh-150px)] overflow-auto mt-20 p-5 relative">
+  <div class="h-[calc(100vh-104px)] overflow-auto mt-12 p-5 relative">
     <RouterView />
 
     <!-- <div class=" w-full h-full">
@@ -144,7 +144,7 @@ const handleLogout = () => {
       <button type="button" v-for="item in links" class="flex justify-center items-center">
         <RouterLink :to="item.url" :title="item.title" class="w-full py-1" exact-active-class="bg-main">
           <img :src="item.img" :alt="item.img" class="mx-auto">
-          <span class="font-bold">{{ item.title }}</span>
+          <span class="font-bold"><small>{{ item.title }}</small></span>
         </RouterLink>
       </button>
     </div>
